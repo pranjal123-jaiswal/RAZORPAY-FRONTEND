@@ -1,9 +1,11 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Box, Stack } from "@chakra-ui/react"
 import Card from './Card'
 import axios from "axios"
 
 const Home = () => {
+    const navigate = useNavigate()
     const checkOutHandler = async(amount) => {
         const {data: {key}} =  await axios.get("http://localhost:4000/api/getKey")
 
@@ -30,10 +32,18 @@ const Home = () => {
             },
             theme: {
                 color: "#3399cc"
+            },
+            handler: function (response) {
+                navigate(`./paymentsuccess/${response.razorpay_order_id}`)
+                // Payment successful, perform actions here
+                console.log('Payment successful', response);
+                // You can perform actions like showing a success message, updating UI, etc.
+                // You can also make an API call to your backend here to perform further actions
             }
         };
         const razor = new window.Razorpay(options);
             razor.open()
+        console.log("checkout complete")
         
         // Define your checkout handler logic here
     }
@@ -41,7 +51,7 @@ const Home = () => {
 
     const cardProps = {
         amount: 5000,
-        img: "https://unsplash.com/photos/macbook-pro-on-top-of-brown-table-1SAnrIxw5OY",
+        img: "./images/laptop.jpg",
         checkOutHandler: checkOutHandler
     }
     const cardProps1 = {
